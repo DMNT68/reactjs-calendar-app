@@ -7,7 +7,7 @@ export const AddNewFab = () => {
 
   return (
     <button className="btn btn-primary fab" onClick={() => dispatch(uiOpenMdal())}>
-      <i class="fas fa-plus"></i>
+      <i className="fas fa-plus"></i>
     </button>
   );
 };
