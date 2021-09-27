@@ -12,3 +12,5 @@ export const dateSetDatesForm = (dates) => ({
   type: types.dateSetDatesForm,
   payload: dates,
 });
+
+export const  dateRestarDatesForm = () => ({ type: types.dateRestarDatesForm });

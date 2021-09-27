@@ -22,13 +22,17 @@ export const uiReducer = (state = initialState, action) => {
       return { ...state, modalOpen: false };
 
     case types.dateSetDatesForm:
-      console.log(action);
       return {
         ...state,
         dates: {
           start: moment(action.payload).minutes(0).seconds(0),
           end: moment(action.payload).minutes(0).seconds(0).add(1, 'hours'),
         },
+      };
+
+    case types.dateRestarDatesForm:
+      return {
+        ...initialState,
       };
 
     default:

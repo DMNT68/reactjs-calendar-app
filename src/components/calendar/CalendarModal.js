@@ -5,7 +5,7 @@ import moment from 'moment';
 import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
 import { uiCloseMdal } from '../../actions/ui';
-import { eventAddNew, eventClearActive, eventUpdated } from '../../actions/events';
+import { eventClearActive, eventStartAddNew, eventStartUpdate } from '../../actions/events';
 
 const customStyles = {
   content: {
@@ -48,18 +48,16 @@ export const CalendarModal = () => {
       setFormValues(activeEvent);
     } else {
       setFormValues(initEvent);
-    }
-  }, [activeEvent, setFormValues]);
-
-  useEffect(() => {
-    setDateStart(dates.start.toDate());
-    setDateEnd(dates.end.toDate());
-    setFormValues({
-      ...formValues,
+      setDateStart(dates.start.toDate());
+      setDateEnd(dates.end.toDate());
+      setFormValues((f) => ({
+      ...f,
       start: dates.start.toDate(),
       end: dates.end.toDate(),
-    })
-  }, [dates,formValues]);
+    }));
+    }
+  }, [activeEvent, setFormValues, dates]);
+
 
   const handleInputChange = ({ target }) => {
     setFormValues({
@@ -102,28 +100,26 @@ export const CalendarModal = () => {
     if (title.trim().length < 2) {
       return setTitleValid(false);
     }
-    setTitleValid(true);
-
-    closeModal();
 
     if (activeEvent) {
-      dispatch(eventUpdated(formValues));
+      dispatch(eventStartUpdate(formValues));
     } else {
-      dispatch(
-        eventAddNew({
-          ...formValues,
-          id: new Date().getTime(),
-          user: {
-            _id: '1234',
-            name: 'Andres',
-          },
-        })
-      );
+      dispatch(eventStartAddNew(formValues));
     }
+
+    setTitleValid(true);
+    closeModal();
   };
 
   return (
-    <Modal isOpen={modalOpen} /* onAfterOpen={afterOpenModal}*/ onRequestClose={closeModal} style={customStyles} closeTimeoutMS={200} className="modal" overlayClassName="modal-fondo">
+    <Modal
+      isOpen={modalOpen}
+      /* onAfterOpen={afterOpenModal}*/ onRequestClose={closeModal}
+      style={customStyles}
+      closeTimeoutMS={200}
+      className="modal"
+      overlayClassName="modal-fondo"
+    >
       <h1>{activeEvent ? 'Editar evento' : 'Nuevo evento'} </h1>
       <hr />
       <form className="container" onSubmit={handleSubmitForm}>
@@ -140,14 +136,30 @@ export const CalendarModal = () => {
         <hr />
         <div className="form-group">
           <label>Titulo y notas</label>
-          <input type="text" className={`form-control ${!titleValid && 'is-invalid'}`} placeholder="Título del evento" name="title" autoComplete="off" value={title} onChange={handleInputChange} />
+          <input
+            type="text"
+            className={`form-control ${!titleValid && 'is-invalid'}`}
+            placeholder="Título del evento"
+            name="title"
+            autoComplete="off"
+            value={title}
+            onChange={handleInputChange}
+          />
           <small id="emailHelp" className="form-text text-muted">
             Una descripción corta
           </small>
         </div>
 
         <div className="form-group">
-          <textarea type="text" className="form-control" placeholder="Notas" rows="5" name="notes" value={notes} onChange={handleInputChange}></textarea>
+          <textarea
+            type="text"
+            className="form-control"
+            placeholder="Notas"
+            rows="5"
+            name="notes"
+            value={notes}
+            onChange={handleInputChange}
+          ></textarea>
           <small id="emailHelp" className="form-text text-muted">
             Información adicional
           </small>

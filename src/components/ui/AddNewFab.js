@@ -7,6 +7,7 @@ export const AddNewFab = () => {
   const dispatch = useDispatch();
 
   const handleOpenModal = () => {
+    console.log('fab')
     dispatch(uiOpenMdal());
     dispatch(eventClearActive());
   };
