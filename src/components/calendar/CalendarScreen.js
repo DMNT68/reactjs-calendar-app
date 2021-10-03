@@ -10,7 +10,7 @@ import 'moment/locale/es';
 import { CalendarEvent } from './CalendarEvent';
 import { CalendarModal } from './CalendarModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { dateSetDatesForm, uiOpenMdal } from '../../actions/ui';
+import { dateSetDatesForm, uiOpenModal } from '../../actions/ui';
 import { eventClearActive, eventSetActive, eventStartLoading } from '../../actions/events';
 import { AddNewFab } from '../ui/AddNewFab';
 import { DeleteEventFab } from '../ui/DeleteEventFab';
@@ -31,7 +31,7 @@ export const CalendarScreen = () => {
   }, [dispatch]);
 
   const onDoubleClick = (e) => {
-    dispatch(uiOpenMdal());
+    dispatch(uiOpenModal());
     // dispatch(dateSetDatesForm(e.start));
   };
 
@@ -46,7 +46,7 @@ export const CalendarScreen = () => {
 
   const onSelectSlot = (e) => {
     if (e.action === 'doubleClick') {
-      dispatch(uiOpenMdal());
+      dispatch(uiOpenModal());
       dispatch(dateSetDatesForm(e.start));
     }
     dispatch(eventClearActive());

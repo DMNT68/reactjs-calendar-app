@@ -4,7 +4,7 @@ import DateTimePicker from 'react-datetime-picker';
 import moment from 'moment';
 import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
-import { uiCloseMdal } from '../../actions/ui';
+import { uiCloseModal } from '../../actions/ui';
 import { eventClearActive, eventStartAddNew, eventStartUpdate } from '../../actions/events';
 
 const customStyles = {
@@ -18,13 +18,15 @@ const customStyles = {
   },
 };
 
-Modal.setAppElement('#root');
+if (process.env.NODE_ENV !== 'test') {
+  Modal.setAppElement('#root');
+}
 
 const now = moment().minutes(0).seconds(0).add(1, 'hours');
 const nowPlus1 = now.clone().add(1, 'hours');
 
 const initEvent = {
-  title: 'Evento',
+  title: '',
   notes: '',
   start: now.toDate(),
   end: nowPlus1.toDate(),
@@ -48,16 +50,17 @@ export const CalendarModal = () => {
       setFormValues(activeEvent);
     } else {
       setFormValues(initEvent);
-      setDateStart(dates.start.toDate());
-      setDateEnd(dates.end.toDate());
-      setFormValues((f) => ({
-      ...f,
-      start: dates.start.toDate(),
-      end: dates.end.toDate(),
-    }));
+      if (process.env.NODE_ENV !== 'test') {
+        setDateStart(dates.start.toDate());
+        setDateEnd(dates.end.toDate());
+        setFormValues((f) => ({
+          ...f,
+          start: dates.start.toDate(),
+          end: dates.end.toDate(),
+        }));
+      }
     }
   }, [activeEvent, setFormValues, dates]);
-
 
   const handleInputChange = ({ target }) => {
     setFormValues({
@@ -67,7 +70,7 @@ export const CalendarModal = () => {
   };
 
   const closeModal = () => {
-    dispatch(uiCloseMdal());
+    dispatch(uiCloseModal());
     dispatch(eventClearActive());
     setFormValues(initEvent);
   };
@@ -119,6 +122,7 @@ export const CalendarModal = () => {
       closeTimeoutMS={200}
       className="modal"
       overlayClassName="modal-fondo"
+      ariaHideApp={!process.env.NODE_ENV === 'test'}
     >
       <h1>{activeEvent ? 'Editar evento' : 'Nuevo evento'} </h1>
       <hr />
